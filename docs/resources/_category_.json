@@ -1,0 +1,8 @@
+{
+  "label": "Resources & Links",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "This is a repository of useful links and resources that have been compiled by the community"
+  }
+}

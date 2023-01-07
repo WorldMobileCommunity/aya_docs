@@ -1,0 +1,148 @@
+---
+sidebar_position: 4
+---
+
+# Markdown Features
+
+**Markdown and additional features**.
+
+## Front Matter
+
+Markdown documents have metadata at the top called [Front Matter](https://jekyllrb.com/docs/front-matter/):
+
+```text title="my-doc.md"
+// highlight-start
+---
+id: my-doc-id
+title: My document title
+description: My document description
+slug: /my-custom-url
+---
+// highlight-end
+
+## Markdown heading
+
+Markdown text with [links](./hello.md)
+```
+
+## Links
+
+Regular Markdown links are supported, using url paths or relative file paths.
+
+```md
+Let's see how to [Create a page](/create-a-page).
+```
+
+```md
+Let's see how to [Create a page](./create-a-page.md).
+```
+
+**Result:** Let's see how to [Create a page](./create-a-page.md).
+
+## Images
+
+Regular Markdown images are supported.
+
+You can use absolute paths to reference images in the static directory (`static/img/earthnode_icon.png`):
+
+```md
+![EarthNode Img](/img/earthnode_icon.png)
+```
+
+![EarthNode Img](/img/earthnode_icon.png)
+
+## Code Blocks
+
+Markdown code blocks are supported with Syntax highlighting.
+
+    ```jsx title="src/components/HelloWorld.js"
+    function HelloWorld() {
+        return (
+            <h1>Hello, World!</h1>
+        )
+    }
+    ```
+
+```jsx title="src/components/HelloWorld.js"
+function HelloWorld() {
+  return <h1>Hello, World!</h1>;
+}
+```
+
+## Admonitions
+
+Special syntax to create admonitions and callouts:
+
+    :::tip My tip
+
+    Use this awesome feature option
+
+    :::
+
+    :::danger Take care
+
+    This action is dangerous
+
+    :::
+
+:::tip My tip
+
+Use this awesome feature option
+
+:::
+
+:::danger Take care
+
+This action is dangerous
+
+:::
+
+## MDX and React Components
+
+[MDX](https://mdxjs.com/) can make your documentation more **interactive** and allows using any **React components inside Markdown**:
+
+```jsx
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '20px',
+      color: '#fff',
+      padding: '10px',
+      cursor: 'pointer',
+    }}
+    onClick={() => {
+      alert(`You clicked the color ${color} with label ${children}`)
+    }}>
+    {children}
+  </span>
+);
+
+This is <Highlight color="#5a2fba">WM Violet green</Highlight> !
+
+This is <Highlight color="#d42e58">WM Cerise</Highlight> !
+
+```
+
+export const Highlight = ({ children, color }) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: "20px",
+      color: "#fff",
+      padding: "10px",
+      cursor: "pointer",
+    }}
+    onClick={() => {
+      alert(`You clicked the color ${color} with label ${children}`);
+    }}
+  >
+    {children}
+  </span>
+);
+
+This is <Highlight color="#5a2fba">WM Violet</Highlight> !
+
+This is <Highlight color="#d42e58">WM Cerise</Highlight> !
+
+This is <Highlight color="#F6642D">WM Salamander</Highlight> !
