@@ -17,7 +17,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "FIFTYONE-50", // Usually your GitHub org/user name.
+  organizationName: "WorldMobileCommunity", // Usually your GitHub org/user name.
   projectName: "aya_docs", // Usually your repo name.
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -38,13 +38,13 @@ const config = {
           routeBasePath: "/",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/FIFTYONE-50/aya_docs/blob/main",
+          editUrl: "https://github.com/WorldMobileCommunity/aya_docs/blob/main",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/FIFTYONE-50/aya_docs/blob/main",
+          editUrl: "https://github.com/WorldMobileCommunity/aya_docs/blob/main",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -71,7 +71,7 @@ const config = {
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
-            href: "https://github.com/FIFTYONE-50/aya_docs",
+            href: "https://github.com/WorldMobileCommunity/aya_docs",
             label: "GitHub",
             position: "right",
           },
@@ -115,7 +115,7 @@ const config = {
               },
               {
                 label: "GitHub",
-                href: "https://github.com/FIFTYONE-50/aya_docs",
+                href: "https://github.com/WorldMobileCommunity/aya_docs",
               },
             ],
           },
