@@ -102,7 +102,7 @@ const config = {
               },
               {
                 label: "Twitter",
-                href: "https://twitter.com/AYA_DOCS",
+                href: "https://twitter.com/WmCommunity",
               },
             ],
           },
