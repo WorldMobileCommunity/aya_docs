@@ -1,6 +1,10 @@
+---
+sidebar_position: 1
+---
+
 # Installation
 
-### Earthnode Install Script:
+### Validator Install Script
 
 ```bash title="earthnode_setup.sh"
 #!/usr/bin/env bash
