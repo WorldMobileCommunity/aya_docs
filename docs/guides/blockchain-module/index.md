@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Index
 
-This section cover the topic for the blockchain module.
+This section covers the following topics pertaining to the blockchain module:
 
 - #### [Getting Started](/guides/blockchain-module/getting-started)
 
