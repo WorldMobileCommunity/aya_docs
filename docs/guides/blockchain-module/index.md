@@ -14,6 +14,6 @@ This section covers the following topics pertaining to the blockchain module:
 
 - #### [Operations](/guides/blockchain-module/operations)
 
-- #### [Useful Blogs](/guides/blockchain-module/useful-blogs)
+- #### [Useful Blogs](/guides/blockchain-module/useful-blogs/coming-soon)
 
-- #### [Additional Guides](/guides/blockchain-module/additional-guides)
+- #### [Additional Guides](/guides/blockchain-module/additional-guides/coming-soon)
