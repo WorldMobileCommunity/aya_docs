@@ -1,8 +1,4 @@
 {
   "label": "Contributing Documentation",
-  "position": 2,
-  "link": {
-    "type": "generated-index",
-    "description": "The following section provides a brief overview of how to contribute to docs on this platform"
-  }
+  "position": 99
 }
