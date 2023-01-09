@@ -1,0 +1,312 @@
+---
+slug: wireguard-walkthrough
+title: Configuring WireGuard pt. 1
+authors: [fiftyone]
+tags: [Security, Linux, walkthrough]
+---
+
+---
+
+<img src="/img/wireguard.svg" width="400" />
+
+---
+
+**WireGuard** is a VPN solution that has gained popularity due to its simplicity and performance.
+It uses public and private keys to establish an encrypted connection, or "tunnel,"
+between two devices called "peers." This allows you to communicate between two devices securely
+over untrusted networks.
+
+In this post, we will go through the basics of configuring WireGuard on a Linux server and connecting
+Peers. You will also learn how to route Internet traffic through the WireGuard Server in a gateway configuration
+and how to use the WireGuard VPN for an encrypted peer-to-peer tunnel.
+
+**At the end of this walkthrough you will have:**
+
+- A Linux server running a configured instance of WireGuard
+
+- A Peer connected to your Linux server using the WireGuard VPN
+
+**Things this article doesn't cover (maybe in a pt.2?):**
+
+- How to configure a VPN mesh using WireGuard
+
+- How to configure firewalls external to the Linux server
+
+- Steps you can take to properly secure your keys
+
+- How to tunnel **ALL** of a peers traffic over the vpn
+
+## Before we begin
+
+---
+
+There are a few things that you will need to have in place in order to follow along with this tutorial:
+
+- **A Linux server:** You will need a Linux server to install and configure WireGuard on. In this tutorial, we will be using Ubuntu 20.04 LTS, but the instructions should also be similar for other distributions.
+
+- **A Public IP address:** In order to access your WireGuard Server from the internet, you will need a public IP address.
+
+- **Basic knowledge of networking concepts:** In order to understand and follow along with the instructions in this tutorial, while not required, it would be helpful if you have a basic understanding of networking concepts such as IP addresses, ports, and protocols.
+
+- **Sudo privileges:** In order to install and configure WireGuard, you will need to have sudo privileges on your Linux server.
+
+- **A Peers device:** In order to test your WireGuard connection, you will need a device such as a desktop or another server.
+
+## Installing WireGuard and Generating Keys
+
+---
+
+Update package list:
+
+```bash
+sudo apt update
+```
+
+Install WireGuard on your server.
+
+```bash
+sudo apt install wireguard
+```
+
+Create the private key for WireGuard using the following command:
+
+```bash
+wg genkey | sudo tee /etc/wireguard/private.key
+```
+
+Then change permissions for the key file:
+
+```bash
+sudo chmod go= /etc/wireguard/private.key
+```
+
+You should receive a single line of base64 encoded output; this is the private key.
+A copy of the output is also stored in the /etc/wireguard/private.key file.
+
+Create the public key, which is derived from the private key, to distribute to Peer machines.
+Use the following command to create the public key file:
+
+```bash
+sudo cat /etc/wireguard/private.key | wg pubkey | sudo tee /etc/wireguard/public.key
+```
+
+You should receive a single line of base64 encoded output; this is the public key.
+
+You have now installed WireGuard on the server and generated both the public and private key files.
+
+## WireGuard Server Configuration
+
+---
+
+Now that you have the key files, you will want to create the config file `wg0.conf`.
+You will then edit with a CLI-based text editor called nano.
+
+```bash
+sudo nano /etc/wireguard/wg0.conf
+```
+
+Add the following lines to the file. Substitute your private key, the IP address from the subnet you want to use, and the port.
+If you are not sure what to select you can use the information from the example. Just be sure to update your private key.
+
+```bash
+[Interface]
+PrivateKey = <Peer's Private Key Goes Here>
+Address = 10.11.12.1/24
+ListenPort = 51820
+SaveConfig = true
+```
+
+Save and close the config file by pressing `CTRL+X` then `y` and then `ENTER`.
+
+## Configure UFW (Uncomplicated Firewall)
+
+---
+
+Yes, that is what it is called.
+
+:::info
+If you changed the port or would like to restrict peers that can attempt to connect via IP address,
+modify the below commands accordingly.
+:::
+Allow traffic to the WireGuard UDP port itself:
+
+```bash
+sudo ufw allow 51820
+```
+
+Restart the firewall
+
+```bash
+sudo ufw disable && sudo ufw enable
+```
+
+Verify the firewall rules:
+
+```bash
+sudo ufw status
+```
+
+The WireGuard Server is now configured to handle the VPN traffic correctly.
+
+## Starting the WireGuard Server
+
+Setup a `systemd` service so that WireGuard will start at boot:
+
+```bash
+sudo systemctl enable wg-quick@wg0.service
+```
+
+:::info
+Entering the tunnel name `wg0` allows you to map to the `/etc/wireguard/wg0.conf` config file.
+This syntax allows you to create multiple tunnels all with different configurations.
+:::
+Veryify that the service is running:
+
+```
+sudo systemctl status wg-quick@wg0.service
+```
+
+---
+
+## Configuring WireGuard Peer
+
+---
+
+Configuring a WireGuard peer is similar to setting up the WireGuard Server. Once the Peer software is installed,
+generate a public/private key, populate a configuration file, and start the tunnel using wg-quick.
+
+Update package list:
+
+```bash
+sudo apt update
+```
+
+Install WireGuard on your server.
+
+```bash
+sudo apt install wireguard
+```
+
+**Create the private key** for WireGuard using the following command:
+
+```bash
+wg genkey | sudo tee /etc/wireguard/private.key
+```
+
+Then change permissions for the key file:
+
+```bash
+sudo chmod go= /etc/wireguard/private.key
+```
+
+You should receive a single line of base64 encoded output; this is the private key.
+A copy of the output is also stored in the /etc/wireguard/private.key file.
+
+:::info
+Do not disclose your private key to anyone that you do not want to have access to your server.
+:::
+
+Create the public key, to distribute to the WireGuard Server.
+
+Use the following command to create the public key file:
+
+```bash
+sudo cat /etc/wireguard/private.key | wg pubkey | sudo tee /etc/wireguard/public.key
+```
+
+## WireGuard Peer's Configuration File
+
+---
+
+Now you can create a configuration file for the peer that contains all the information to establish a connection to the WireGuard Server.
+
+What you need for the configuration file:
+
+- The `private key` that you generated on the `peer`.
+
+- The IPv4 address range that you defined on the WireGuard Server
+
+- The `public key` from the `WireGuard Server`.
+
+- The `public IP address` and port number of the `WireGuard Server`.
+
+Create `/etc/wireguard/wg0.conf` file on the WireGuard Peer:
+
+```bash
+sudo nano /etc/wireguard/wg0.conf
+```
+
+Add the following lines to the file:
+
+```bash
+[Interface]
+PrivateKey = <The Peer's Private Key Goes Here>
+Address = 10.11.12.2/24
+
+[Peer]
+PublicKey = <WireGuard Server's Public Key Goes Here>
+AllowedIPs = 10.11.12.0/24
+Endpoint = <WireGuard Servers Public IP Address Goes Here>:51820
+```
+
+:::info
+If you changed any of the defaults, edit the text to reflect the appropriate information.
+:::
+
+## Adding the Peer's Public Key to the WireGuard Server
+
+---
+
+Ensure that you have a copy of the base64 encoded public key for the WireGuard Peer by running:
+
+```bash
+sudo cat /etc/wireguard/public.key
+```
+
+Now log back into the `WireGuard Server` and run the following command:
+
+```
+sudo wg set wg0 peer <Peers public key goes here> allowed-ips 10.11.12.2
+```
+
+Very the peer line shows in the WireGuard peers public key and address:
+
+```bash
+sudo wg
+```
+
+## Connecting the WireGuard Peer to the Tunnel
+
+If you only want the VPN on for specific use cases use the wg-quick command to establish the connection manually.
+If you want to start the VPN at boot, follow the same configuration steps performed during the [Starting the WireGuard Server](/blog/wireguard-walkthrough#starting-the-wireguard-server) section.
+
+Run the following command to set this up:
+
+```bash
+sudo wg-quick up wg0
+```
+
+You can check the status of the tunnel on the peer using the wg command:
+
+```bash
+sudo wg
+```
+
+Very you can ping the ipv address for the WireGuard Servers VPN interface:
+
+```bash
+Ping 10.11.12.1
+```
+
+Once you are ready to disconnect from the VPN on the peer, use the wg-quick command:
+
+```bash
+sudo wg-quick down wg0
+```
+
+If you didn't choose to auto start the VPN, you can run the `wg-quick up wg0` & `wg-quick down wg0` activate and deactivate the VPN now.
+
+## Conclusion
+
+You now have an established VPN using WireGuard between two endpoints that provides you with a secure connection to manage your server or access information and resources.
+If you found the helpful article follow me on [Twitter](https://twitter.com/FIFTY_1) and let me know.
