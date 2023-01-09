@@ -17,8 +17,7 @@ between two devices called "peers." This allows you to communicate between two d
 over untrusted networks.
 
 In this post, we will go through the basics of configuring WireGuard on a Linux server and connecting
-Peers. You will also learn how to route Internet traffic through the WireGuard Server in a gateway configuration
-and how to use the WireGuard VPN for an encrypted peer-to-peer tunnel.
+Peers. In After the walkthrough, you will know how to use the WireGuard VPN for an encrypted peer-to-peer tunnel.
 
 **At the end of this walkthrough you will have:**
 
@@ -50,7 +49,7 @@ There are a few things that you will need to have in place in order to follow al
 
 - **Sudo privileges:** In order to install and configure WireGuard, you will need to have sudo privileges on your Linux server.
 
-- **A Peers device:** In order to test your WireGuard connection, you will need a device such as a desktop or another server.
+- **A Peer device:** In order to test your WireGuard connection, you will need a device such as a desktop or another server.
 
 ## Installing WireGuard and Generating Keys
 
@@ -269,7 +268,7 @@ Now log back into the `WireGuard Server` and run the following command:
 sudo wg set wg0 peer <Peers public key goes here> allowed-ips 10.11.12.2
 ```
 
-Very the peer line shows in the WireGuard peers public key and address:
+Verify the peer line shows in the WireGuard peers public key and address:
 
 ```bash
 sudo wg
